@@ -11,8 +11,8 @@ erDiagram
         VARCHAR2(9) JOB
         NUMBER(4) MGR
         DATE HIREDATE
-        NUMBER(7,2) SAL
-        NUMBER(7,2) COMM
+        NUMBER SAL
+        NUMBER COMM
         NUMBER(2) DEPTNO FK
     }
     BONUS {
