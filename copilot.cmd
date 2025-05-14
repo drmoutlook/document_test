@@ -1,7 +1,7 @@
 @workspace /explain
 create a class diagram using mermaid js for the #pythan_exec_proc.sql
-
-
+Add comment to the #pythan_exec_proc.sql
+generate a mermaid entity relationship diagram for the schema defined in #file
 
 
 classDiagram
