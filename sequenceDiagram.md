@@ -1,3 +1,4 @@
+```mermaid
 sequenceDiagram
     participant User
     participant pythian_exec_proc
@@ -25,3 +26,4 @@ sequenceDiagram
         end
         pythian_exec_proc->>pythian_exec_proc: Handle error, return 9999
     end
+```
