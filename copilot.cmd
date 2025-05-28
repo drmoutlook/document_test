@@ -5,6 +5,7 @@ generate a mermaid entity relationship diagram for the schema defined in #file
 generate a mermaid js user journey diagram for the file#pythian_exec_proc.sql
 generate a mermaid js user journey diagram for the property data in the #pythian_exec_proc.sql
 Create a sequence diagram for the sequence step in #file:pythian_exec_proc.sql
+Create a sequence diagram for the sequence step in #file:pythian_exec_proc.sql highlight any potential security vulnerabilities as notes
 In the above mentioned sequence diagram, highlight any potential security vulnerabilities as notes in the diagram
 
 classDiagram
