@@ -1,0 +1,120 @@
+# Architecture Documentation
+
+This document describes the overall architecture of the project, including the structure, component interactions, and deployment process. Mermaid diagrams are provided for visual clarity.
+
+---
+
+## 1. Project Structure
+
+```mermaid
+graph TD
+    A[Job Scheduler / Orchestrator]
+    B[Job Config (dummy.csv)]
+    C[Shell Executor (.exe/.sh)]
+    D[SQL Executor (.sql)]
+    E[Database Server]
+    F[Stored Procedures]
+    G[Logs / Output Files]
+
+    A -->|Reads| B
+    A -->|Executes| C
+    C -->|Runs| D
+    D -->|Connects| E
+    E -->|Invokes| F
+    D -->|Writes| G
+    C -->|Writes| G
+```
+
+**Explanation:**  
+- The Job Scheduler reads job definitions from `dummy.csv`.
+- It triggers shell executables, which run SQL scripts.
+- SQL scripts connect to the database and invoke stored procedures.
+- Output and errors are logged.
+
+---
+
+## 2. Component Interactions
+
+```mermaid
+sequenceDiagram
+    participant Scheduler
+    participant Shell
+    participant SQL
+    participant DB
+    participant SP as StoredProc
+    participant Log
+
+    Scheduler->>Shell: Start SHELLFILE (from CSV)
+    Shell->>SQL: Execute SQLFILE (from CSV)
+    SQL->>DB: Connect as DBUSER to DBSERVER
+    SQL->>SP: EXEC PROCEDURES (from CSV)
+    SP-->>SQL: Return Status
+    SQL->>Log: Write Output/Error
+    Shell->>Log: Write Output/Error
+    Scheduler-->>Scheduler: Wait for next SCHEDULE
+```
+
+**Explanation:**  
+- Scheduler initiates jobs at the specified schedule.
+- Each job may involve a shell and SQL execution, which interacts with the database and logs results.
+
+---
+
+## 3. Deployment Process
+
+```mermaid
+flowchart TD
+    S[Source Repo (Code, dummy.csv, SQL Scripts)]
+    B[Build/Prepare Artifacts]
+    U[Upload/Deploy to Server]
+    C[Configure Scheduler (e.g., Cron)]
+    E[Execution Environment]
+    O[Operational System]
+
+    S --> B
+    B --> U
+    U --> C
+    C --> E
+    E --> O
+```
+
+**Explanation:**  
+- Code, configs, and scripts are sourced from version control.
+- Build/preparation creates deployment-ready artifacts.
+- Artifacts are uploaded to the execution server.
+- Scheduler is configured to execute jobs.
+- The system runs jobs as per schedule.
+
+---
+
+## 4. Database Procedure Execution Flow
+
+```mermaid
+flowchart TD
+    Start([Start: Call pythian_exec_proc])
+    DebugCheck{Debug Enabled?}
+    ExecProc[EXECUTE @sp_name]
+    RetCode[Check Return Code]
+    SuccessCheck{Return code = 0?}
+    Success([Log Success & End])
+    ErrorHandler[Error Handler]
+    Error([Log Error & Return 9999])
+
+    Start --> DebugCheck
+    DebugCheck -- Yes --> ExecProc
+    DebugCheck -- No --> ExecProc
+    ExecProc --> RetCode
+    RetCode --> SuccessCheck
+    SuccessCheck -- Yes --> Success
+    SuccessCheck -- No --> ErrorHandler
+    ErrorHandler --> Error
+```
+
+**Explanation:**  
+- The control flow of `pythian_exec_proc` includes logging, dynamic procedure execution, error handling, and debug logic.
+
+---
+
+## 5. Summary
+
+This architecture enables automated, configurable job execution based on CSV definitions, supporting detailed logging, error handling, and modular deployment.
